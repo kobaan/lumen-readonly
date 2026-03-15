@@ -14,7 +14,7 @@ pub enum VcsOverride {
 
 #[derive(Parser)]
 #[command(name = "lumen")]
-#[command(about = "AI-powered CLI tool for git commit summaries", long_about = None)]
+#[command(about = "AI-powered CLI tool for git commit summaries (readonly version)", long_about = None)]
 #[command(version)]
 pub struct Cli {
     /// Path to configuration file eg: ./path/to/lumen.config.json
@@ -99,17 +99,6 @@ pub enum Commands {
     },
     /// List all commits in an interactive fuzzy-finder, and summarize the changes
     List,
-    /// Generate a commit message for the staged changes
-    Draft {
-        /// Add context to communicate intent
-        #[arg(short, long)]
-        context: Option<String>,
-    },
-
-    Operate {
-        #[arg()]
-        query: String,
-    },
     /// Launch interactive side-by-side diff viewer
     Diff {
         /// Commit reference: SHA, HEAD, HEAD~3..HEAD, main..feature, main...feature

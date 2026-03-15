@@ -92,23 +92,6 @@ async fn run() -> Result<(), LumenError> {
                 })
                 .await?
         }
-        Commands::Draft { context } => {
-            // Draft always uses staged diff (git convention)
-            let diff = backend.get_working_tree_diff(true)?;
-            let git_entity = GitEntity::Diff(Diff::from_working_tree_diff(diff, true)?);
-            command
-                .execute(command::CommandType::Draft {
-                    git_entity,
-                    context,
-                    draft_config: config.draft,
-                })
-                .await?
-        }
-        Commands::Operate { query } => {
-            command
-                .execute(command::CommandType::Operate { query })
-                .await?;
-        }
         Commands::Diff {
             reference,
             pr,

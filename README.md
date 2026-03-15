@@ -1,7 +1,8 @@
 # <p align="center"><img src="https://github.com/user-attachments/assets/896f9239-134a-4428-9bb5-50ea59cdb5c3" alt="lumen" /></p>
 
-# MODIFIED VERSION by kobaan
+# MODIFIED READONLY VERSION by kobaan
 - added provider option: OpenAI-compatible endpoint
+- removed operate and draft capabilities: for more safe readonly operation
 
 #
 
@@ -28,8 +29,6 @@
   - [Configuration (for AI features)](#configuration-for-ai-features)
 - [Usage](#usage-)
   - [Visual Diff Viewer](#visual-diff-viewer)
-  - [Generate Commit Messages](#generate-commit-messages)
-  - [Generate Git Commands](#generate-git-commands)
   - [Explain Changes](#explain-changes)
   - [Interactive Mode](#interactive-mode)
   - [Tips & Tricks](#tips--tricks)
@@ -41,7 +40,6 @@
 ## Features 🔅
 
 - **Beautiful & Ergonomic Diff Viewer**: Review your code with syntax highlighting & leave comments
-- **Smart Commit Messages**: Generate conventional commit messages for your staged changes
 - **Interactive Search**: Find and explore commits using fuzzy search
 - **Multiple AI Providers**: Supports OpenAI, Claude, Groq, Ollama, and more
 - **Flexible**: Works with any git workflow and supports multiple AI providers
@@ -73,7 +71,7 @@ cargo install lumen
 
 ### Configuration (for AI features)
 
-If you want to use AI-powered features (`explain`, `draft`, `list`, `operate`), run the interactive setup:
+If you want to use AI-powered features (`list`, `diff`, `explain`), run the interactive setup:
 
 ```bash
 lumen configure
@@ -91,32 +89,6 @@ The configuration is saved to `~/.config/lumen/lumen.config.json`.
 
 
 ## Usage 🔅
-
-### Generate Commit Messages
-
-Create meaningful commit messages for your staged changes:
-
-```bash
-# Basic usage - generates a commit message based on staged changes
-lumen draft
-# Output: "feat(button.tsx): Update button color to blue"
-
-# Add context for more meaningful messages
-lumen draft --context "match brand guidelines"
-# Output: "feat(button.tsx): Update button color to align with brand identity guidelines"
-```
-
-
-### Generate Git Commands
-
-Ask Lumen to generate Git commands based on a natural language query:
-
-```bash
-lumen operate "squash the last 3 commits into 1 with the message 'squashed commit'"
-# Output: git reset --soft HEAD~3 && git commit -m "squashed commit" [y/N]
-```
-
-The command will display an explanation of what the generated command does, show any warnings for potentially dangerous operations, and prompt for confirmation before execution.
 
 ### Visual Diff Viewer
 
@@ -253,42 +225,6 @@ lumen explain --list
 # Deprecated: lumen list (use lumen explain --list instead)
 ```
 
-### Tips & Tricks
-
-```bash
-# Copy commit message to clipboard
-lumen draft | pbcopy                  # macOS
-lumen draft | xclip -selection c      # Linux
-
-# View the commit message and copy it
-lumen draft | tee >(pbcopy)
-
-# Open in your favorite editor
-lumen draft | code -      
-
-# Directly commit using the generated message
-lumen draft | git commit -F -           
-```
-
-If you are using [lazygit](https://github.com/jesseduffield/lazygit), you can add this to the [user config](https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md)
-```yml
-customCommands:
-  - key: '<c-l>'
-    context: 'files'
-    command: 'lumen draft | tee >(pbcopy)'
-    loadingText: 'Generating message...'
-    showOutput: true
-  - key: '<c-k>'
-    context: 'files'
-    command: 'lumen draft -c {{.Form.Context | quote}} | tee >(pbcopy)'
-    loadingText: 'Generating message...'
-    showOutput: true
-    prompts:
-          - type: 'input'
-            title: 'Context'
-            key: 'Context'
-```
-
 ## AI Providers 🔅
 
 Configure your preferred AI provider:
@@ -343,22 +279,7 @@ Lumen will load configurations in the following order of priority:
   "provider": "openai",
   "model": "gpt-5-mini",
   "api_key": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "theme": "catppuccin-mocha",
-  "draft": {
-    "commit_types": {
-      "docs": "Documentation only changes",
-      "style": "Changes that do not affect the meaning of the code",
-      "refactor": "A code change that neither fixes a bug nor adds a feature",
-      "perf": "A code change that improves performance",
-      "test": "Adding missing tests or correcting existing tests",
-      "build": "Changes that affect the build system or external dependencies",
-      "ci": "Changes to our CI configuration files and scripts",
-      "chore": "Other changes that don't modify src or test files",
-      "revert": "Reverts a previous commit",
-      "feat": "A new feature",
-      "fix": "A bug fix"
-    }
-  }
+  "theme": "catppuccin-mocha"
 }
 ```
 
@@ -384,7 +305,7 @@ export LUMEN_BASE_URL="https://127.0.0.1:4000/v1/"
 }
 
 # Or override using CLI flags
-lumen -p "ollama" -m "llama3.2" draft
+lumen -p "ollama" -m "llama3.2" list
 ```
 ## Contributors
 

@@ -5,7 +5,7 @@ use genai::{Client, ClientBuilder, ModelIden, ServiceTarget};
 use thiserror::Error;
 
 use crate::ai_prompt::{AIPrompt, AIPromptError};
-use crate::command::{draft::DraftCommand, explain::ExplainCommand, operate::OperateCommand};
+use crate::command::{explain::ExplainCommand};
 use crate::config::cli::ProviderType;
 use crate::config::ProviderInfo;
 use crate::error::LumenError;
@@ -200,16 +200,6 @@ impl LumenProvider {
 
     pub async fn explain(&self, command: &ExplainCommand) -> Result<String, ProviderError> {
         let prompt = AIPrompt::build_explain_prompt(command)?;
-        self.complete(prompt).await
-    }
-
-    pub async fn draft(&self, command: &DraftCommand) -> Result<String, ProviderError> {
-        let prompt = AIPrompt::build_draft_prompt(command)?;
-        self.complete(prompt).await
-    }
-
-    pub async fn operate(&self, command: &OperateCommand) -> Result<String, ProviderError> {
-        let prompt = AIPrompt::build_operate_prompt(command.query.as_str())?;
         self.complete(prompt).await
     }
 

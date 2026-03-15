@@ -1,10 +1,7 @@
-use draft::DraftCommand;
 use explain::ExplainCommand;
 use list::ListCommand;
-use operate::OperateCommand;
 use std::process::Stdio;
 
-use crate::config::configuration::DraftConfig;
 use crate::error::LumenError;
 use crate::git_entity::GitEntity;
 use crate::provider::LumenProvider;
@@ -12,10 +9,8 @@ use crate::vcs::VcsBackend;
 
 pub mod configure;
 pub mod diff;
-pub mod draft;
 pub mod explain;
 pub mod list;
-pub mod operate;
 
 pub enum CommandType<'a> {
     Explain {
@@ -24,14 +19,6 @@ pub enum CommandType<'a> {
     },
     List {
         backend: &'a dyn VcsBackend,
-    },
-    Draft {
-        git_entity: GitEntity,
-        context: Option<String>,
-        draft_config: DraftConfig,
-    },
-    Operate {
-        query: String,
     },
 }
 
@@ -52,22 +39,6 @@ impl LumenCommand {
                     .await
             }
             CommandType::List { backend } => ListCommand.execute(&self.provider, backend).await,
-            CommandType::Draft {
-                git_entity,
-                context,
-                draft_config,
-            } => {
-                DraftCommand {
-                    git_entity,
-                    draft_config,
-                    context,
-                }
-                .execute(&self.provider)
-                .await
-            }
-            CommandType::Operate { query } => {
-                OperateCommand { query }.execute(&self.provider).await
-            }
         }
     }
 
