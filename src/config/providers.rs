@@ -12,6 +12,7 @@ pub struct ProviderInfo {
     pub display_name: &'static str,
     pub default_model: &'static str,
     pub env_key: &'static str,
+    pub base_url: &'static str,
 }
 
 /// All supported providers - single source of truth.
@@ -23,6 +24,15 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "OpenAI",
         default_model: "gpt-5-mini",
         env_key: "OPENAI_API_KEY",
+        base_url: "https://api.openai.com/v1/",
+    },
+    ProviderInfo {
+        id: "openai-compatible",
+        provider_type: ProviderType::OpenaiCompatible,
+        display_name: "OpenAI-Compatible",
+        default_model: "qwen3-4b-mlx",
+        env_key: "OPENAI_API_KEY",
+        base_url: "https://127.0.0.1:4000/v1/",
     },
     ProviderInfo {
         id: "groq",
@@ -30,6 +40,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "Groq",
         default_model: "llama-3.3-70b-versatile",
         env_key: "GROQ_API_KEY",
+        base_url: "https://api.groq.com/v1/",
     },
     ProviderInfo {
         id: "claude",
@@ -37,6 +48,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "Claude (Anthropic)",
         default_model: "claude-sonnet-4-5-20250930",
         env_key: "ANTHROPIC_API_KEY",
+        base_url: "https://api.anthropic.com/v1/",
     },
     ProviderInfo {
         id: "ollama",
@@ -44,6 +56,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "Ollama (local)",
         default_model: "llama3.2",
         env_key: "",
+        base_url: "http://localhost:11434/v1/",
     },
     ProviderInfo {
         id: "opencode-zen",
@@ -51,6 +64,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "OpenCode Zen",
         default_model: "claude-sonnet-4-5",
         env_key: "OPENCODE_API_KEY",
+        base_url: "https://opencode.ai/zen/v1/",
     },
     ProviderInfo {
         id: "openrouter",
@@ -58,6 +72,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "OpenRouter",
         default_model: "anthropic/claude-sonnet-4.5",
         env_key: "OPENROUTER_API_KEY",
+        base_url: "https://openrouter.ai/api/v1/",
     },
     ProviderInfo {
         id: "deepseek",
@@ -65,6 +80,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "DeepSeek",
         default_model: "deepseek-chat",
         env_key: "DEEPSEEK_API_KEY",
+        base_url: "https://api.deepseek.com/v1/",
     },
     ProviderInfo {
         id: "gemini",
@@ -72,6 +88,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "Gemini (Google)",
         default_model: "gemini-2.5-flash",
         env_key: "GEMINI_API_KEY",
+        base_url: "https://gemini.googleapis.com/v1/",
     },
     ProviderInfo {
         id: "xai",
@@ -79,6 +96,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "xAI (Grok)",
         default_model: "grok-4-mini-fast",
         env_key: "XAI_API_KEY",
+        base_url: "https://api.x.ai/v1/",
     },
     ProviderInfo {
         id: "vercel",
@@ -86,6 +104,7 @@ pub const ALL_PROVIDERS: &[ProviderInfo] = &[
         display_name: "Vercel AI Gateway",
         default_model: "anthropic/claude-sonnet-4.5",
         env_key: "VERCEL_API_KEY",
+        base_url: "https://ai-gateway.vercel.sh/v1/",
     },
 ];
 

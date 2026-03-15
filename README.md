@@ -1,5 +1,10 @@
 # <p align="center"><img src="https://github.com/user-attachments/assets/896f9239-134a-4428-9bb5-50ea59cdb5c3" alt="lumen" /></p>
 
+# MODIFIED VERSION by kobaan
+- added provider option: OpenAI-compatible endpoint
+
+#
+
 [![Crates.io Total Downloads](https://img.shields.io/crates/d/lumen?label=downloads%20%40crates.io)](https://crates.io/crates/lumen)
 [![GitHub Releases](https://img.shields.io/github/downloads/jnsahaj/lumen/total?label=dowloads%20%40releases)](https://github.com/jnsahaj/lumen/releases)
 ![GitHub License](https://img.shields.io/github/license/jnsahaj/lumen)
@@ -290,12 +295,13 @@ Configure your preferred AI provider:
 
 ```bash
 # Using CLI arguments
-lumen -p openai -k "your-api-key" -m "gpt-5-mini" draft
+lumen -p openai-compatible -u https://127.0.0.1:4000/v1/ -k "your-api-key" -m "your-model" list
 
 # Using environment variables
 export LUMEN_AI_PROVIDER="openai"
 export LUMEN_API_KEY="your-api-key"
 export LUMEN_AI_MODEL="gpt-5-mini"
+export LUMEN_BASE_URL="https://127.0.0.1:4000/v1/"
 ```
 
 ### Supported Providers
@@ -303,6 +309,7 @@ export LUMEN_AI_MODEL="gpt-5-mini"
 | Provider | API Key Required | Models |
 |----------|-----------------|---------|
 | [OpenAI](https://platform.openai.com/docs/models) `openai` (Default) | Yes | `gpt-5.2`, `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-4.1`, `gpt-4.1-mini`, `o4-mini` (default: `gpt-5-mini`) |
+| [OpenAI-Compatible](https://platform.openai.com/docs/models) `openai-compatible` | Yes | `your-local-models` (default: `qwen3-4b-mlx`) |
 | [Claude](https://www.anthropic.com/pricing) `claude` | Yes | `claude-sonnet-4-5-20250930`, `claude-opus-4-5-20251115`, `claude-haiku-4-5-20251015` (default: `claude-sonnet-4-5-20250930`) |
 | [Gemini](https://ai.google.dev/) `gemini` | Yes (free tier) | `gemini-3-pro`, `gemini-3-flash-preview`, `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-2.5-flash-lite` (default: `gemini-2.5-flash`) |
 | [Groq](https://console.groq.com/docs/models) `groq` | Yes (free) | `llama-3.3-70b-versatile`, `llama-3.1-8b-instant`, `meta-llama/llama-4-maverick-17b-128e-instruct`, `openai/gpt-oss-120b` (default: `llama-3.3-70b-versatile`) |
@@ -368,6 +375,7 @@ Example: Using different providers for different projects:
 export LUMEN_AI_PROVIDER="openai"
 export LUMEN_AI_MODEL="gpt-5-mini"
 export LUMEN_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+export LUMEN_BASE_URL="https://127.0.0.1:4000/v1/"
 
 # Override per project using config file
 {

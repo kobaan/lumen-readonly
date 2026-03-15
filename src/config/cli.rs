@@ -30,6 +30,9 @@ pub struct Cli {
     #[arg(short = 'm', long = "model")]
     pub model: Option<String>,
 
+    #[arg(short = 'u', long = "base-url")]
+    pub base_url: Option<String>,
+
     /// Version control system to use (auto-detected if not specified)
     #[arg(value_enum, long = "vcs")]
     pub vcs: Option<VcsOverride>,
@@ -41,6 +44,7 @@ pub struct Cli {
 #[derive(Copy, Clone, PartialEq, Eq, ValueEnum, Debug)]
 pub enum ProviderType {
     Openai,
+    OpenaiCompatible,
     Groq,
     Claude,
     Ollama,
@@ -58,6 +62,7 @@ impl FromStr for ProviderType {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "openai" => Ok(ProviderType::Openai),
+            "openai-compatible" => Ok(ProviderType::OpenaiCompatible),
             "groq" => Ok(ProviderType::Groq),
             "claude" => Ok(ProviderType::Claude),
             "ollama" => Ok(ProviderType::Ollama),

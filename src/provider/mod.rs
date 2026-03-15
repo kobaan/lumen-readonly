@@ -46,6 +46,7 @@ impl LumenProvider {
         provider_type: ProviderType,
         api_key: Option<String>,
         model: Option<String>,
+        base_url: Option<String>,
     ) -> Result<Self, LumenError> {
         let (backend, provider_name) = match provider_type {
             // Custom endpoint providers (OpenCode Zen, OpenRouter, Vercel) - use ServiceTargetResolver
@@ -88,6 +89,50 @@ impl LumenProvider {
                         let ServiceTarget { model, .. } = service_target;
                         Ok(ServiceTarget {
                             endpoint: Endpoint::from_static(endpoint),
+                            auth: AuthData::from_env(auth_env_key),
+                            model: ModelIden::new(adapter_kind, model.model_name),
+                        })
+                    },
+                );
+
+                let client = ClientBuilder::default()
+                    .with_service_target_resolver(target_resolver)
+                    .build();
+
+                (
+                    ProviderBackend::GenAI {
+                        client,
+                        model: model_for_resolver,
+                    },
+                    defaults.display_name.to_string(),
+                )
+            }
+            // Special case for OpenaiCompatible with dynamic base_url
+            ProviderType::OpenaiCompatible => {
+                let defaults = ProviderInfo::for_provider(provider_type);
+                let model = model.unwrap_or_else(|| defaults.default_model.to_string());
+                let model_for_resolver = model.clone();
+
+                // Get API key from CLI/config or environment
+                let auth_env_key = defaults.env_key;
+                if let Some(key) = api_key {
+                    std::env::set_var(auth_env_key, key);
+                }
+
+                // Use -u base_url if provided, otherwise fall back to the provider default
+                // Ensure the URL lives for the `'static` lifetime required by Endpoint::from_static.
+                let base_url: &str = match base_url {
+                    Some(url) => Box::leak(url.into_boxed_str()),
+                    None => defaults.base_url,
+                };
+
+                let adapter_kind = AdapterKind::OpenAI;
+
+                let target_resolver = ServiceTargetResolver::from_resolver_fn(
+                    move |service_target: ServiceTarget| -> Result<ServiceTarget, genai::resolver::Error> {
+                        let ServiceTarget { model, .. } = service_target;
+                        Ok(ServiceTarget {
+                            endpoint: Endpoint::from_static(base_url),
                             auth: AuthData::from_env(auth_env_key),
                             model: ModelIden::new(adapter_kind, model.model_name),
                         })
